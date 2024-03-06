@@ -1,0 +1,68 @@
+[tool.poetry]
+name = "cdk-poetry-asset-code"
+version = "0.1.0"
+description = "A custom AWS CDK construct that integrates Poetry for building Python Lambda function packages."
+authors = ["TCL Research Europe <tcl.research.eu@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "poetry_asset_code"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+aws-cdk-lib = "^2.130.0"
+constructs = "^10.3.0"
+
+
+[tool.poetry.group.code-analysis.dependencies]
+pyright = "^1.1.352"
+pre-commit = "^3.6.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+fix = true
+line-length = 120
+src = ["poetr_asset_code"]
+target-version = "py312"
+
+[tool.ruff.lint]
+unfixable = [
+    "ERA", # do not autoremove commented out code
+]
+extend-select = [
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "ERA", # flake8-eradicate/eradicate
+    "I",   # isort
+    "N",   # pep8-naming
+    "PIE", # flake8-pie
+    "PGH", # pygrep
+    "RUF", # ruff checks
+    "SIM", # flake8-simplify
+    "TCH", # flake8-type-checking
+    "TID", # flake8-tidy-imports
+    "UP",  # pyupgrade
+]
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.isort]
+force-single-line = true
+lines-between-types = 1
+lines-after-imports = 2
+
+[tool.black]
+target-version = ['py312']
+preview = true
+
+
+[tool.pyright]
+include = ["poetry_asset_code"]
+exclude = ["**/__pycache__"]
+reportMissingImports = true
+reportMissingTypeStubs = false
+pythonVersion = "3.12"
+pythonPlatform = "Linux"
+typeCheckingMode = "strict"
