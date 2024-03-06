@@ -24,7 +24,7 @@ jobs:
           poetry config virtualenvs.create false
       - name: Install dependencies
         run: |
-          poetry install --only code-analysis
+          poetry install
       - name: Run pre-commit
         run: |
           pre-commit run --all-files
