@@ -27,17 +27,18 @@ pip install cdk-poetry-asset-code
 ## Usage
 Import `PoetryAssetCode` in your CDK stack and use it to define the code for your AWS Lambda function:
 ```python
-from aws_cdk import core
+from aws_cdk import Stack
+from constructs import Construct
 from aws_cdk.aws_lambda import Function, Runtime
 from poetry_asset_code import PoetryAssetCode
 
-class MyLambdaStack(core.Stack):
-    def __init__(self, scope: core.Construct, id: str, **kwargs):
+class MyLambdaStack(Stack):
+    def __init__(self, scope: Construct, id: str, **kwargs):
         super().__init__(scope, id, **kwargs)
 
         lambda_function = Function(
             self, "MyPoetryLambdaFunction",
-            runtime=Runtime.PYTHON_3_8,
+            runtime=Runtime.PYTHON_3_12,
             handler="handler.main",
             code=PoetryAssetCode("/path/to/your/poetry/project")
         )
