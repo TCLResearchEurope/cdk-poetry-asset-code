@@ -1,4 +1,4 @@
-name: Code Analysis
+name: Python Tests
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
     branches: [ main ]
 
 jobs:
-  pre-commit:
-    name: Run Pre-commit Hooks
+  tests:
+    name: Run tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,10 +24,6 @@ jobs:
           poetry config virtualenvs.create false
       - name: Install dependencies
         run: |
-          poetry install
-      - name: Run pre-commit
-        run: |
-          pre-commit run --all-files
-      - name: Run pyright
-        run: |
-          pyright
+          poetry install --with dev
+      - name: Run tests
+        run: poetry run pytest
