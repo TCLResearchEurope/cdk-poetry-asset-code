@@ -1,0 +1,76 @@
+name: Deploy Package
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+jobs:
+  pre-commit:
+    name: Run Pre-commit Hooks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+      - name: Configure Poetry
+        run: |
+          poetry config virtualenvs.create false
+      - name: Install dependencies
+        run: |
+          poetry install
+      - name: Run pre-commit
+        run: |
+          pre-commit run --all-files
+      - name: Run pyright
+        run: |
+          pyright
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+      - name: Configure Poetry
+        run: |
+          poetry config virtualenvs.create false
+      - name: Install dependencies
+        run: |
+          poetry install --with dev
+      - name: Run tests
+        run: poetry run pytest
+  pypi-publish:
+    name: Upload release to PyPI
+    needs: [pre-commit, tests]
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+      - name: Configure Poetry
+        run: |
+          poetry config virtualenvs.create false
+      - name: Build package
+        run: |
+          poetry build
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
